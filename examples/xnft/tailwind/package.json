@@ -1,5 +1,5 @@
 {
-  "name": "@coral-xyz/example-xnft-iframe",
+  "name": "@coral-xyz/tailwind-example",
   "version": "0.1.0",
   "scripts": {
     "build": "xnft build",
@@ -7,10 +7,10 @@
     "dev": "xnft dev"
   },
   "devDependencies": {
-    "@parcel/config-default": "^2.7.0"
+    "@coral-xyz/xnft-cli": "*"
   },
   "dependencies": {
-    "react": "^17.0.2",
-    "react-xnft": "*"
+    "react-xnft": "*",
+    "react": "^17.0.2"
   }
 }
