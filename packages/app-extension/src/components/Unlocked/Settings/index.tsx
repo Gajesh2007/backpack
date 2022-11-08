@@ -41,7 +41,6 @@ import {
   LaunchDetail,
   PrimaryButton,
   SubtextParagraph,
-  TextField,
   WalletAddress,
 } from "../../../components/common";
 import {
@@ -85,7 +84,10 @@ import { DiscordIcon, GridIcon } from "../../common/Icon";
 import { XnftSettings } from "./Xnfts";
 import { XnftDetail } from "./Xnfts/Detail";
 import { RecentActivityButton } from "../../Unlocked/Balances/RecentActivity";
+import { PreferenceSolanaCustomRpcUrl } from "./Preferences/Solana/CustomRpcUrl";
+import { PreferenceEthereumCustomRpcUrl } from "./Preferences/Ethereum/CustomRpcUrl";
 import WaitingRoom from "../../common/WaitingRoom";
+import { TextInput } from "../../common/Inputs";
 
 const useStyles = styles((theme) => ({
   addConnectWalletLabel: {
@@ -167,7 +169,7 @@ function AvatarButton() {
         <div style={{ height: "100%" }}>
           <NavStackEphemeral
             initialRoute={{ name: "root", title: "Profile" }}
-            options={(args) => ({ title: "" })}
+            options={() => ({ title: "" })}
             navButtonLeft={
               <CloseButton onClick={() => setSettingsOpen(false)} />
             }
@@ -219,6 +221,12 @@ function AvatarButton() {
               )}
             />
             <NavStackScreen
+              name={"preferences-solana-edit-rpc-connection"}
+              component={(props: any) => (
+                <PreferenceSolanaCustomRpcUrl {...props} />
+              )}
+            />
+            <NavStackScreen
               name={"preferences-solana-commitment"}
               component={(props: any) => (
                 <PreferencesSolanaCommitment {...props} />
@@ -234,6 +242,12 @@ function AvatarButton() {
               name={"preferences-ethereum-rpc-connection"}
               component={(props: any) => (
                 <PreferencesEthereumConnection {...props} />
+              )}
+            />
+            <NavStackScreen
+              name={"preferences-ethereum-edit-rpc-connection"}
+              component={(props: any) => (
+                <PreferenceEthereumCustomRpcUrl {...props} />
               )}
             />
             <NavStackScreen
@@ -317,7 +331,7 @@ function _SettingsContent() {
     <div>
       <AvatarHeader />
       <WalletLists close={close} />
-      <SettingsList close={close} />
+      <SettingsList />
     </div>
   );
 }
@@ -750,7 +764,7 @@ export const AddConnectWalletButton = ({
   );
 };
 
-function SettingsList({ close }: { close: () => void }) {
+function SettingsList() {
   const theme = useCustomTheme();
   const nav = useNavStack();
   const background = useBackgroundClient();
@@ -941,7 +955,6 @@ function SettingsList({ close }: { close: () => void }) {
 }
 
 export function ImportSecretKey({ blockchain }: { blockchain: Blockchain }) {
-  const classes = useStyles();
   const background = useBackgroundClient();
   const existingPublicKeys = useWalletPublicKeys();
   const nav = useNavStack();
@@ -960,7 +973,14 @@ export function ImportSecretKey({ blockchain }: { blockchain: Blockchain }) {
     };
   }, [theme]);
 
-  const onClick = async () => {
+  useEffect(() => {
+    // Clear error on form input changes
+    setError(null);
+  }, [name, secretKey]);
+
+  const save = async (e: React.FormEvent) => {
+    e.preventDefault();
+
     let secretKeyHex;
     try {
       secretKeyHex = validateSecretKey(
@@ -989,8 +1009,9 @@ export function ImportSecretKey({ blockchain }: { blockchain: Blockchain }) {
 
   return (
     <>
-      <Box
-        sx={{
+      <form
+        onSubmit={save}
+        style={{
           display: "flex",
           flexDirection: "column",
           height: "100%",
@@ -1007,28 +1028,29 @@ export function ImportSecretKey({ blockchain }: { blockchain: Blockchain }) {
           </Box>
           <Box sx={{ margin: "0 16px" }}>
             <Box sx={{ marginBottom: "4px" }}>
-              <TextField
+              <TextInput
                 autoFocus={true}
                 placeholder="Name"
                 value={name}
-                setValue={setName}
+                setValue={(e) => setName(e.target.value)}
               />
             </Box>
-            <TextField
+            <TextInput
               placeholder="Enter private key"
               value={secretKey}
-              setValue={setSecretKey}
+              setValue={(e) => {
+                setSecretKey(e.target.value);
+              }}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  save(e);
+                }
+              }}
               rows={4}
-              rootClass={classes.privateKeyTextFieldRoot}
+              error={error ? true : false}
+              errorMessage={error || ""}
             />
           </Box>
-          {error && (
-            <Typography
-              style={{ color: "red", marginTop: "8px", marginLeft: "24px" }}
-            >
-              {error}
-            </Typography>
-          )}
         </Box>
         <Box
           sx={{
@@ -1040,12 +1062,12 @@ export function ImportSecretKey({ blockchain }: { blockchain: Blockchain }) {
           }}
         >
           <PrimaryButton
-            onClick={onClick}
+            type="submit"
             label="Import"
             disabled={secretKey.length === 0}
           />
         </Box>
-      </Box>
+      </form>
       <WithMiniDrawer
         openDrawer={openDrawer}
         setOpenDrawer={setOpenDrawer}

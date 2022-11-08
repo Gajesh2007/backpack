@@ -1,6 +1,9 @@
 import React from "react";
-
-const c = (name: string) => (props: any) => React.createElement(name, props);
+import { NodeProps } from "./reconciler";
+interface IProps extends NodeProps {
+  style?: React.CSSProperties;
+}
+const c = (name: string) => (props: IProps) => React.createElement(name, props);
 
 export const Text = c("Text");
 export const TextField = c("TextField");
@@ -18,6 +21,8 @@ export const Path = c("Path");
 export const Circle = c("Circle");
 export const NavAnimation = c("NavAnimation");
 export const Iframe = c("Iframe");
+export const Audio = c("Audio");
+export const Video = c("Video");
 
 export const BalancesTable = c("BalancesTable");
 export const BalancesTableContent = c("BalancesTableContent");

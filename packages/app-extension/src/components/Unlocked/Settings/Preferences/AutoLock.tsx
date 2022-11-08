@@ -1,34 +1,15 @@
 import { useState, useEffect } from "react";
 import { Typography } from "@mui/material";
-import { useCustomTheme, styles } from "@coral-xyz/themes";
+import { useCustomTheme } from "@coral-xyz/themes";
 import { UI_RPC_METHOD_KEYRING_AUTOLOCK_UPDATE } from "@coral-xyz/common";
 import { TextField, PrimaryButton, SecondaryButton } from "../../../common";
 import { useNavStack } from "../../../common/Layout/NavStack";
 import { useAutolockSecs, useBackgroundClient } from "@coral-xyz/recoil";
-
-const useStyles = styles((theme) => ({
-  textRootClass: {
-    marginTop: "0 !important",
-    marginBottom: "0 !important",
-    "& .MuiOutlinedInput-root": {
-      background: theme.custom.colors.nav,
-      "& fieldset": {
-        border: `${theme.custom.colors.borderFull}`,
-      },
-      "&:hover fieldset": {
-        border: `solid 2pt ${theme.custom.colors.primaryButton}`,
-      },
-      "& input": {
-        border: "none",
-      },
-    },
-  },
-}));
+import { TextInput } from "../../../common/Inputs";
 
 export function PreferencesAutoLock() {
   const nav = useNavStack();
   const theme = useCustomTheme();
-  const classes = useStyles();
   const autoLockSecs = useAutolockSecs();
   const background = useBackgroundClient();
   const [minutes, setMinutes] = useState(autoLockSecs / 60.0);
@@ -40,7 +21,8 @@ export function PreferencesAutoLock() {
   const onCancel = () => {
     nav.pop();
   };
-  const onSet = async () => {
+  const save = async (e: React.FormEvent) => {
+    e.preventDefault();
     if (minutes > 0) {
       const secs = Math.round(minutes * 60);
       await background.request({
@@ -52,7 +34,8 @@ export function PreferencesAutoLock() {
   };
 
   return (
-    <div
+    <form
+      onSubmit={save}
       style={{
         paddingLeft: "16px",
         paddingRight: "16px",
@@ -77,12 +60,19 @@ export function PreferencesAutoLock() {
         >
           Set the duration of the auto-lock timer.
         </Typography>
-        <TextField
-          autoFocus
+        <TextInput
+          placeholder={""}
+          type={"string"}
+          error={false}
+          autoFocus={true}
           inputProps={{ inputMode: "numeric", pattern: "[0-9]*" }}
-          rootClass={classes.textRootClass}
           value={minutes.toString()}
-          setValue={(v: string) => setMinutes(+v.replace(/[.,]/g, ""))}
+          setValue={(e) => {
+            if (isNaN(e.target.value)) {
+              return;
+            }
+            setMinutes(+e.target.value.replace(/[.,]/g, ""));
+          }}
           endAdornment={
             <Typography
               style={{
@@ -106,13 +96,8 @@ export function PreferencesAutoLock() {
             border: `${theme.custom.colors.borderFull}`,
           }}
         />
-        <PrimaryButton
-          disabled={minutes <= 0}
-          label="Set"
-          onClick={() => onSet()}
-          style={{}}
-        />
+        <PrimaryButton label="Set" type="submit" disabled={minutes <= 0} />
       </div>
-    </div>
+    </form>
   );
 }

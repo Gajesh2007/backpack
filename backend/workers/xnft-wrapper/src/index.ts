@@ -2,7 +2,7 @@ const RPC = "https://api.devnet.solana.com";
 
 //TODO: This should always point to the most recent released renderer code
 const PROD_RENDERER_URL =
-  "https://unpkg.com/@coral-xyz/react-xnft-dom-renderer@0.2.0-latest.214/dist/index.js";
+  "https://unpkg.com/@coral-xyz/react-xnft-dom-renderer@0.2.0-latest.427/dist/index.js";
 
 const V1_BUNDLES: string[] = [
   "https://ipfs.io/ipfs/bafybeibhd37z7osxbp2fvxcenid6uufsvrpumawxw4ked7h2br4duz3sme",
@@ -12,10 +12,8 @@ const V1_BUNDLES: string[] = [
   "https://xnfts.s3.us-west-2.amazonaws.com/4QaPNGJFsdqT5cbURcLcVGPQD8GgCpNM6Bmf2p88ex2f/bundle/index.js",
   "https://xnfts.s3.us-west-2.amazonaws.com/HGVjbFZdHuEK1e8MAXte5hG9NquPSig5RobdLvyXvSXG/bundle/index.js",
   "https://ipfs.io/ipfs/bafybeiekyqolvv7xwtg5mp65wnpsumzf7kns4fiticgdmgbrh5wdmbm5ve",
-  "https://assets.tiexo.com/xnft/_/v33/index.js",
   "https://ipfs.io/ipfs/bafybeig4hrp7prl5afffpv2wzd4dmmxlrg7f4oj3vnytwpnjzxy7gh22ve",
   "https://ipfs.io/ipfs/bafybeignivvx6ilmx3hrcekwk53riant44knedielglpa3pirh76ld7tse",
-  "https://xnfts.s3.us-west-2.amazonaws.com/FgrUhnsbTYURx1Pyc5D2HDiPaDHzkbH3bv8aDzEmf16x/bundle/index.js",
   "https://ipfs.io/ipfs/bafybeifwqc6zlfh4in56y2cptfa64rivqlqunu5kfxy43rxlacm7kqbjz4",
 ];
 
@@ -94,6 +92,7 @@ export default {
           <head>
             <meta charset="utf-8"/>
             <link rel="stylesheet" href="https://doof72pbjabye.cloudfront.net/fonts/inter/font.css"></link>
+            <script src="https://cdn.tailwindcss.com"></script>
           </head>
           <body>
             <div id="container"></div>

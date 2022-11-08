@@ -111,6 +111,10 @@ const RECONCILER = ReactReconciler({
         return createButtonInstance(kind, props, r, h, o);
       case NodeKind.Loading:
         return createLoadingInstance(kind, props, r, h, o);
+      case NodeKind.Audio:
+        return createAudioInstance(kind, props, r, h, o);
+      case NodeKind.Video:
+        return createVideoInstance(kind, props, r, h, o);
       case NodeKind.ScrollBar:
         return createScrollBarInstance(kind, props, r, h, o);
       case NodeKind.Svg:
@@ -141,7 +145,9 @@ const RECONCILER = ReactReconciler({
         }
         return createCustomInstance(kind, props, r, h, o);
       default:
-        throw new Error("New error found");
+        throw new Error(
+          `Component ${kind} is not part of the ReactXnft library, please use the available set of components.`
+        );
     }
   },
   createTextInstance: (
@@ -177,116 +183,9 @@ const RECONCILER = ReactReconciler({
     host: Host
   ): UpdateDiff => {
     logger.debug("prepareUpdate", instance, type, oldProps, newProps);
-    let payload: UpdateDiff = {};
-    switch (type) {
-      case NodeKind.View:
-        // @ts-ignore
-        if (oldProps.style !== newProps.style) {
-          // @ts-ignore
-          payload = { ...payload, style: newProps.style };
-        }
-        // @ts-ignore
-        if (oldProps.onClick !== newProps.onClick) {
-          // @ts-ignore
-          payload = { ...payload, onClick: newProps.onClick };
-        }
-        return payload;
-      case NodeKind.Text:
-        // @ts-ignore
-        if (oldProps.style !== newProps.style) {
-          payload = {
-            ...payload,
-            // @ts-ignore
-            style: newProps.style,
-          };
-        }
-        return payload;
-      case NodeKind.TextField:
-        // @ts-ignore
-        if (oldProps.value !== newProps.value) {
-          // @ts-ignore
-          payload = { ...payload, value: newProps.value };
-        }
-        return payload;
-      case NodeKind.NavAnimation:
-        // @ts-ignore
-        if (oldProps.routeName !== newProps.routeName) {
-          // @ts-ignore
-          payload = { ...payload, routeName: newProps.routeName };
-        }
-        return payload;
-      case NodeKind.Path:
-        // @ts-ignore
-        if (oldProps.fill !== newProps.fill) {
-          // @ts-ignore
-          payload = { ...payload, fill: newProps.fill };
-        }
-        // @ts-ignore
-        if (oldProps.style !== newProps.style) {
-          // @ts-ignore
-          payload = { ...payload, style: newProps.style };
-        }
-        return payload;
-      case NodeKind.Button:
-        // @ts-ignore
-        if (oldProps.style !== newProps.style) {
-          // @ts-ignore
-          payload = { ...payload, style: newProps.style };
-        }
-        // @ts-ignore
-        if (oldProps.onClick !== newProps.onClick) {
-          // @ts-ignore
-          payload = { ...payload, onClick: newProps.onClick };
-        }
-        return payload;
-      case NodeKind.Image:
-        // @ts-ignore
-        if (oldProps.style !== newProps.style) {
-          // @ts-ignore
-          payload = { ...payload, style: newProps.style };
-        }
-        // @ts-ignore
-        if (oldProps.onClick !== newProps.onClick) {
-          // @ts-ignore
-          payload = { ...payload, onClick: newProps.onClick };
-        }
-        // @ts-ignore
-        if (oldProps.src !== newProps.src) {
-          // @ts-ignore
-          payload = { ...payload, src: newProps.src };
-        }
-        return payload;
-      case NodeKind.Iframe:
-        return null;
-      case NodeKind.Svg:
-        return null;
-      case NodeKind.Circle:
-        return null;
-      case NodeKind.Table:
-        return null;
-      case NodeKind.TableRow:
-        return null;
-      case NodeKind.Loading:
-        return null;
-      case NodeKind.ScrollBar:
-        return null;
-      case NodeKind.BalancesTable:
-        return null;
-      case NodeKind.BalancesTableHead:
-        return null;
-      case NodeKind.BalancesTableContent:
-        return null;
-      case NodeKind.BalancesTableRow:
-        return null;
-      case NodeKind.BalancesTableCell:
-        return null;
-      case NodeKind.BalancesTableFooter:
-        return null;
-      case NodeKind.Custom:
-        return null;
-      default:
-        throw new Error("unexpected node kind");
-    }
+    return {
+      props: newProps,
+    };
   },
   finalizeInitialChildren: (
     _parent: NodeSerialized,
@@ -337,93 +236,7 @@ const RECONCILER = ReactReconciler({
       return;
     }
 
-    switch (type) {
-      case NodeKind.View:
-        if (updatePayload.style) {
-          instance.style = updatePayload.style;
-        }
-        if (
-          updatePayload.onClick !== undefined &&
-          updatePayload.onClick !== null
-        ) {
-          // @ts-ignore
-          instance.props.onClick = updatePayload.onClick;
-          delete updatePayload["onClick"];
-        }
-        break;
-      case NodeKind.Text:
-        if (updatePayload.style !== undefined && updatePayload.style !== null) {
-          instance.style = updatePayload.style;
-        }
-        break;
-      case NodeKind.TextField:
-        if (updatePayload.value !== undefined && updatePayload.value !== null) {
-          // @ts-ignore
-          instance.props.value = updatePayload.value;
-        }
-        break;
-      case NodeKind.NavAnimation:
-        if (
-          updatePayload.routeName !== undefined &&
-          updatePayload.routeName !== null
-        ) {
-          // @ts-ignore
-          instance.props.routeName = updatePayload.routeName;
-        }
-        break;
-      case NodeKind.Path:
-        if (updatePayload.fill !== undefined && updatePayload.fill !== null) {
-          // @ts-ignore
-          instance.props.fill = updatePayload.fill;
-        }
-        if (updatePayload.style !== undefined && updatePayload.style !== null) {
-          // @ts-ignore
-          instance.props.style = updatePayload.style;
-        }
-        break;
-      case NodeKind.Button:
-        if (updatePayload.style !== undefined && updatePayload.style !== null) {
-          instance.style = updatePayload.style;
-        }
-        if (
-          updatePayload.onClick !== undefined &&
-          updatePayload.onClick !== null
-        ) {
-          // @ts-ignore
-          instance.props.onClick = updatePayload.onClick;
-          delete updatePayload["onClick"];
-        }
-        break;
-      case NodeKind.Image:
-        if (updatePayload.style) {
-          instance.style = updatePayload.style;
-        }
-        if (updatePayload.src) {
-          // @ts-ignore
-          instance.props.src = updatePayload.src;
-        }
-        if (
-          updatePayload.onClick !== undefined &&
-          updatePayload.onClick !== null
-        ) {
-          // @ts-ignore
-          instance.props.onClick = updatePayload.onClick;
-          delete updatePayload["onClick"];
-        }
-        break;
-      case NodeKind.Text:
-        throw new Error("commitUpdate Text not yet implemented");
-      case NodeKind.Svg:
-        throw new Error("commitUpdate Svg not yet implemented");
-      case NodeKind.Circle:
-        throw new Error("commitUpdate Circle not yet implemented");
-      case NodeKind.ScrollBar:
-        throw new Error("commitUpdate ScrollBar not yet implemented");
-      case NodeKind.Loading:
-        throw new Error("commitUpdate Loading not yet implemented");
-      default:
-        throw new Error("unexpected node kind");
-    }
+    instance.props = updatePayload.props;
 
     ReactDom.getInstance().commitUpdate(instance.id, updatePayload);
   },
@@ -497,7 +310,7 @@ const RECONCILER = ReactReconciler({
 
 function createViewInstance(
   _kind: NodeKind,
-  props: NodeProps,
+  props: ViewProps,
   _r: RootContainer,
   h: Host,
   _o: OpaqueHandle
@@ -508,10 +321,8 @@ function createViewInstance(
     kind: NodeKind.View,
     props: {
       ...props,
-      // onClick,
       children: undefined,
     },
-    style: props.style || {},
     children: [],
   };
 }
@@ -530,7 +341,6 @@ function createTableInstance(
       ...props,
       children: undefined,
     },
-    style: props.style || {},
     children: [],
   };
 }
@@ -549,7 +359,6 @@ function createTableRowInstance(
       ...props,
       children: undefined,
     },
-    style: props.style || {},
     children: [],
   };
 }
@@ -568,7 +377,6 @@ function createTextLabelInstance(
       ...props,
       children: undefined,
     },
-    style: props.style || {},
     children: [],
   };
 }
@@ -588,7 +396,6 @@ function createTextFieldInstance(
       ...props,
       children: undefined,
     },
-    style: props.style || {},
     children: [],
   };
 }
@@ -610,7 +417,6 @@ function createImageInstance(
       src,
       children: undefined,
     },
-    style: props.style || {},
     children: [],
   };
 }
@@ -630,7 +436,38 @@ function createButtonInstance(
       ...props,
       children: undefined,
     },
-    style: props.style || {},
+    children: [],
+  };
+}
+
+function createAudioInstance(
+  _kind: NodeKind,
+  props: NodeProps,
+  _r: RootContainer,
+  h: Host,
+  _o: OpaqueHandle
+): AudioNodeSerialized {
+  const id = h.nextId();
+  return {
+    id,
+    kind: NodeKind.Audio,
+    props,
+    children: [],
+  };
+}
+
+function createVideoInstance(
+  _kind: NodeKind,
+  props: NodeProps,
+  _r: RootContainer,
+  h: Host,
+  _o: OpaqueHandle
+): VideoNodeSerialized {
+  const id = h.nextId();
+  return {
+    id,
+    kind: NodeKind.Video,
+    props,
     children: [],
   };
 }
@@ -648,7 +485,6 @@ function createLoadingInstance(
     kind: NodeKind.Loading,
     // @ts-ignore
     props,
-    style: props.style || {},
     children: [],
   };
 }
@@ -668,7 +504,6 @@ function createScrollBarInstance(
       ...props,
       children: undefined,
     },
-    style: {},
     children: [],
   };
 }
@@ -688,7 +523,6 @@ function createSvgInstance(
       ...props,
       children: undefined,
     },
-    style: props.style || {},
     children: [],
   };
 }
@@ -707,7 +541,6 @@ function createPathInstance(
     props: {
       ...props,
     },
-    style: props.style || {},
     children: [],
   };
 }
@@ -726,7 +559,6 @@ function createCircleInstance(
     props: {
       ...props,
     },
-    style: props.style || {},
     children: [],
   };
 }
@@ -745,7 +577,6 @@ function createIframeInstance(
     props: {
       ...props,
     },
-    style: props.style || {},
     children: [],
   };
 }
@@ -765,7 +596,6 @@ function createCustomInstance(
       ...props,
       children: undefined,
     },
-    style: props.style || {},
     children: [],
     component: kind,
   };
@@ -786,7 +616,6 @@ function createNavAnimationInstance(
       ...props,
       children: undefined,
     },
-    style: {},
     children: [],
   };
 }
@@ -805,7 +634,6 @@ function createBalancesTableInstance(
       ...props,
       children: undefined,
     },
-    style: props.style || {},
     children: [],
   };
 }
@@ -825,7 +653,6 @@ function createBalancesTableHeadInstance(
       ...props,
       children: undefined,
     },
-    style: props.style || {},
     children: [],
   };
 }
@@ -844,7 +671,6 @@ function createBalancesTableContentInstance(
       ...props,
       children: undefined,
     },
-    style: props.style || {},
     children: [],
   };
 }
@@ -864,7 +690,6 @@ function createBalancesTableRowInstance(
       ...props,
       children: undefined,
     },
-    style: props.style || {},
     children: [],
   };
 }
@@ -883,7 +708,6 @@ function createBalancesTableCellInstance(
       ...props,
       children: undefined,
     },
-    style: props.style || {},
     children: [],
   };
 }
@@ -902,7 +726,6 @@ function createBalancesTableFooterInstance(
       ...props,
       children: undefined,
     },
-    style: props.style || {},
     children: [],
   };
 }
@@ -923,22 +746,7 @@ export const HOST: Host = {
   })(),
 };
 
-type _HostConfig = HostConfig<
-  NodeKind,
-  NodeProps,
-  RootContainer,
-  NodeSerialized,
-  TextSerialized,
-  HydratableInstance,
-  Element,
-  Host,
-  UpdateDiff,
-  ChildSet,
-  TimeoutHandle,
-  NoTimeout
->;
-
-type Style = any;
+type Style = React.CSSProperties;
 
 //
 // All node types.
@@ -964,8 +772,11 @@ export type NodeSerialized =
   | BalancesTableRowNodeSerialized
   | BalancesTableCellNodeSerialized
   | BalancesTableFooterNodeSerialized
+  | AudioNodeSerialized
+  | VideoNodeSerialized
   | CustomNodeSerialized;
-type NodeProps =
+
+export type NodeProps =
   | TableProps
   | TableRowProps
   | TextProps
@@ -998,6 +809,8 @@ export enum NodeKind {
   TextField = "TextField",
   Image = "Image",
   View = "View",
+  Audio = "Audio",
+  Video = "Video",
   Button = "Button",
   Loading = "Loading",
   ScrollBar = "ScrollBar",
@@ -1051,6 +864,7 @@ type TextNodeSerialized = DefNodeSerialized<NodeKind.Text, TextProps>;
 type TextProps = {
   style: Style;
   children: undefined;
+  tw: string;
 };
 
 //
@@ -1068,6 +882,7 @@ type TextFieldProps = {
   placeholder?: string;
   style: Style;
   children: undefined;
+  tw: string;
 };
 
 //
@@ -1079,6 +894,7 @@ type ImageProps = {
   onClick?: (() => Promise<void>) | boolean;
   children: undefined;
   src: string;
+  tw: string;
 };
 
 //
@@ -1086,9 +902,10 @@ type ImageProps = {
 //
 type ViewNodeSerialized = DefNodeSerialized<NodeKind.View, ViewProps>;
 type ViewProps = {
-  onClick?: (() => Promise<void>) | boolean;
+  onClick?: () => Promise<void>;
   style: Style;
   children: undefined;
+  tw: string;
 };
 
 //
@@ -1099,6 +916,7 @@ type ButtonProps = {
   onClick?: (() => Promise<void>) | boolean;
   style: Style;
   children: undefined;
+  tw: string;
 };
 
 //
@@ -1108,6 +926,29 @@ type LoadingNodeSerialized = DefNodeSerialized<NodeKind.Loading, LoadingProps>;
 type LoadingProps = {
   style: Style;
   children: undefined;
+};
+
+type AudioNodeSerialized = DefNodeSerialized<NodeKind.Audio, AudioProps>;
+type AudioProps = {
+  style: Style;
+  children: undefined;
+  volume: number;
+  src: string;
+  stream: MediaStream;
+  muted: boolean;
+  autoplay: boolean;
+};
+
+type VideoNodeSerialized = DefNodeSerialized<NodeKind.Video, VideoProps>;
+type VideoProps = {
+  style: Style;
+  children: undefined;
+  volume: number;
+  src: string;
+  stream: MediaStream;
+  muted: boolean;
+  autoplay: boolean;
+  tw: string;
 };
 
 //
@@ -1133,6 +974,7 @@ type SvgProps = {
   fill: string;
   children: undefined;
   style: Style;
+  tw: string;
 };
 
 //
@@ -1146,6 +988,7 @@ type PathProps = {
   fillRule?: string;
   clipRule?: string;
   stroke?: string;
+  tw: string;
 };
 
 type CircleNodeSerialized = DefNodeSerialized<NodeKind.Circle, CircleProps>;
@@ -1159,6 +1002,7 @@ type CircleProps = {
   pathLength: string;
   strokeDasharray: string;
   strokeDashoffset: string;
+  tw: string;
 };
 
 //
@@ -1171,6 +1015,7 @@ type IframeProps = {
   width: string;
   height: string;
   xnft: boolean;
+  tw: string;
 };
 
 //
@@ -1277,7 +1122,6 @@ type DefNodeSerialized<K, P> = {
   id: number;
   kind: K;
   props: P;
-  style: Style;
   children: Array<Element>;
 };
 
@@ -1285,7 +1129,6 @@ type CustomNodeSerialized = {
   id: number;
   kind: NodeKind.Custom;
   props: CustomProps;
-  style: Style;
   children: Array<Element>;
   component: string;
 };

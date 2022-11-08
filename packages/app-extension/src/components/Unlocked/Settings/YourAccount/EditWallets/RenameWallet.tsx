@@ -1,27 +1,17 @@
 import React, { useState, useEffect } from "react";
 import { Typography } from "@mui/material";
-import { styles, useCustomTheme } from "@coral-xyz/themes";
+import { useCustomTheme } from "@coral-xyz/themes";
 import { UI_RPC_METHOD_KEYNAME_UPDATE } from "@coral-xyz/common";
 import { useBackgroundClient } from "@coral-xyz/recoil";
 import { useNavStack } from "../../../../common/Layout/NavStack";
-import { TextField, PrimaryButton, SecondaryButton } from "../../../../common";
-
-const useStyles = styles((theme) => ({
-  textRootClass: {
-    marginTop: "0 !important",
-    marginBottom: "0 !important",
-    "& .MuiOutlinedInput-root": {
-      background: theme.custom.colors.nav,
-    },
-  },
-}));
+import { PrimaryButton, SecondaryButton } from "../../../../common";
+import { TextInput } from "../../../../common/Inputs";
 
 export const RenameWallet: React.FC<{ publicKey: string; name: string }> = ({
   publicKey,
   name,
 }) => {
   const [walletName, setWalletName] = useState(name);
-  const classes = useStyles();
   const nav = useNavStack();
   const theme = useCustomTheme();
   const background = useBackgroundClient();
@@ -65,11 +55,10 @@ export const RenameWallet: React.FC<{ publicKey: string; name: string }> = ({
           marginTop: "112px",
         }}
       >
-        <TextField
-          autoFocus
-          rootClass={classes.textRootClass}
+        <TextInput
+          autoFocus={true}
           value={walletName}
-          setValue={(v: string) => setWalletName(v)}
+          setValue={(e) => setWalletName(e.target.value)}
         />
         <Typography
           style={{
